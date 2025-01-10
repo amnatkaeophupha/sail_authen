@@ -8,6 +8,13 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Auth\Events\PasswordReset;
+
+
 
 class AuthController extends Controller
 {
@@ -35,7 +42,7 @@ class AuthController extends Controller
         $user->email = trim($request->email);
         $user->password = trim($request->password); //Hash::make(password) in model User;
         $user->role = trim($request->role);
-        //$user->remember_token = Str::random(64);
+        //$user->remember_token = Str::random(50);
         $rec = $user->save();
 
         if ($rec) {
@@ -80,6 +87,65 @@ class AuthController extends Controller
             }
         }
     }
+
+    public function sendResetLinkEmail(Request $request)
+    {
+        // Validate the email input
+        $request->validate(['email' => 'required|email|exists:users,email',]);
+
+        // Send the reset link
+        $status = Password::sendResetLink($request->only('email'));
+
+        // Check the status and return a response
+        return $status === Password::RESET_LINK_SENT
+        ? back()->with(['status' => __($status)])
+        : back()->withErrors(['email' => __($status)]);
+
+    }
+
+    public function resetPassword(Request $request)
+    {
+       // dd($request->all());
+        $request->validate([
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|min:6|confirmed',
+        ]);
+
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function (User $user, string $password) {
+                $user->forceFill([
+                    'password' => Hash::make($password)
+                ])->setRememberToken(Str::random(60));
+
+                $user->save();
+
+                event(new PasswordReset($user));
+            }
+        );
+
+        return $status === Password::PASSWORD_RESET
+        ? redirect('signin')->with('success', __($status))
+        : back()->withErrors(['email' => [__($status)]]);
+
+    }
+
+    public function forgot_password_post(Request $request)
+    {
+        $request->validate(['email' => 'required|email|exists:users,email']);
+        $token = Str::random(64);
+
+        //DB::table('password_reset_tokens')->insert(['email'=>$request->email, 'token'=>$token, 'created_at'=>Carbon::now()]);
+
+        $user = User::where('email', $request['email'])->first();
+        $user->remember_token = Str::random(64);
+        $user->save();
+
+       // Mail::to($user->email)->send(new ForgotPasswordMail($user));
+
+    }
+
 
     public function signout(Request $request)
     {

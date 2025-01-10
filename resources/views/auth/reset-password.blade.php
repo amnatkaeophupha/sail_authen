@@ -7,16 +7,16 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<!--favicon-->
-	<link rel="icon" href="assets/images/favicon-32x32.png" type="image/png" />
+	<link rel="icon" href="{{url('rocker');}}/images/favicon-32x32.png" type="image/png" />
 	<!-- loader-->
-	<link href="{{url('rocker');}}/assets/css/pace.min.css" rel="stylesheet" />
-	<script src="{{url('rocker');}}/assets/js/pace.min.js"></script>
+	<link href="{{url('rocker');}}/css/pace.min.css" rel="stylesheet" />
+	<script src="{{url('rocker');}}/js/pace.min.js"></script>
 	<!-- Bootstrap CSS -->
-	<link href="{{url('rocker');}}/assets/css/bootstrap.min.css" rel="stylesheet">
-	<link href="{{url('rocker');}}/assets/css/bootstrap-extended.css" rel="stylesheet">
+	<link href="{{url('rocker');}}/css/bootstrap.min.css" rel="stylesheet">
+	<link href="{{url('rocker');}}/css/bootstrap-extended.css" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-	<link href="{{url('rocker');}}/assets/css/app.css" rel="stylesheet">
-	<link href="{{url('rocker');}}/assets/css/icons.css" rel="stylesheet">
+	<link href="{{url('rocker');}}/css/app.css" rel="stylesheet">
+	<link href="{{url('rocker');}}/css/icons.css" rel="stylesheet">
 	<title>Rocker - Bootstrap 5 Admin Dashboard Template</title>
 </head>
 <body>
@@ -28,26 +28,35 @@
 				<div class="col mx-auto">
 					<div class="card">
 						<div class="card-body">
+                            <form action="{{ url('reset-password') }}" method="POST">
+                            @csrf
 							<div class="p-4">
 								<div class="mb-4 text-center">
-									<img src="{{url('rocker');}}/assets/images/logo-icon.png" width="60" alt="" />
+									<img src="{{url('rocker');}}/images/logo-icon.png" width="60" alt="" />
 								</div>
 								<div class="text-start mb-4">
 									<h5 class="">Genrate New Password</h5>
 									<p class="mb-0">We received your reset password request. Please enter your new password!</p>
 								</div>
+                                <div class="mb-3 mt-4">
+                                    @error('password')<label class="text-danger">{{ $message }}</label>@enderror
+                                    @error('email')<label class="text-danger">{{ $message }}</label>@enderror
+                                </div>
 								<div class="mb-3 mt-4">
 									<label class="form-label">New Password</label>
-									<input type="text" class="form-control" placeholder="Enter new password" />
+                                    <input type="hidden" name="email" value="{{ request('email') }}" class="form-control"/>
+                                    <input type="hidden" name="token" value="{{ $token }}">
+									<input type="text" name="password" class="form-control" placeholder="Enter new password" />
 								</div>
 								<div class="mb-4">
 									<label class="form-label">Confirm Password</label>
-									<input type="text" class="form-control" placeholder="Confirm password" />
+									<input type="text" name="password_confirmation" class="form-control" placeholder="Confirm password" />
 								</div>
 								<div class="d-grid gap-2">
-									<button type="button" class="btn btn-primary">Change Password</button> <a href="authentication-login.html" class="btn btn-light"><i class='bx bx-arrow-back mr-1'></i>Back to Login</a>
+									<button type="submit" class="btn btn-primary">Change Password</button> <a href="{{ url('signin') }}" class="btn btn-light"><i class='bx bx-arrow-back mr-1'></i>Back to Login</a>
 								</div>
 							</div>
+                            </form>
 						</div>
 					</div>
 				</div>
