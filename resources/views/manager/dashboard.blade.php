@@ -7,7 +7,7 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>User</h1>
+    <h1>manager</h1>
     <a href="{{ url('signout');}}">signout</a>
 </body>
 </html>

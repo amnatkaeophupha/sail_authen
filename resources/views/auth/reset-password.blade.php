@@ -46,11 +46,11 @@
 									<label class="form-label">New Password</label>
                                     <input type="hidden" name="email" value="{{ request('email') }}" class="form-control"/>
                                     <input type="hidden" name="token" value="{{ $token }}">
-									<input type="text" name="password" class="form-control" placeholder="Enter new password" />
+									<input type="password" name="password" class="form-control" placeholder="Enter new password" />
 								</div>
 								<div class="mb-4">
 									<label class="form-label">Confirm Password</label>
-									<input type="text" name="password_confirmation" class="form-control" placeholder="Confirm password" />
+									<input type="password" name="password_confirmation" class="form-control" placeholder="Confirm password" />
 								</div>
 								<div class="d-grid gap-2">
 									<button type="submit" class="btn btn-primary">Change Password</button> <a href="{{ url('signin') }}" class="btn btn-light"><i class='bx bx-arrow-back mr-1'></i>Back to Login</a>

@@ -34,7 +34,7 @@ class AuthController extends Controller
             'name'=> 'required',
             'email'=> 'required|email|unique:users',
             'password' =>'required|string|min:6',
-            'role'=>'required|in:admin,user'
+            'role'=>'required|in:admin,manager'
         ]);
 
         $user = new User();
@@ -75,10 +75,11 @@ class AuthController extends Controller
                 return redirect()->intended('/admin');
                 //return view('admin.dashboard');
 
-            }elseif(Auth::user()->role=='user'){
+            }elseif(Auth::user()->role=='manager'){
 
-                return redirect()->intended('/user');
-                //return view('user.dashboard');
+                //echo Auth::user()->role;
+                return redirect()->intended('/manager');
+                //return view('manager.dashboard');
 
             }else{
 

@@ -77,7 +77,7 @@
 												<label for="inputSelectCountry" class="form-label">Country</label>
 												<select class="form-select" name="role" id="inputSelectCountry" aria-label="Default select example">
 													<option value="">Select Role</option>
-													<option {{ old('role')=='user'? 'selected' : '' }} value="user">User</option>
+													<option {{ old('role')=='manager'? 'selected' : '' }} value="manager">Manager</option>
 													<option {{ old('role')=='admin'? 'selected' : '' }} value="admin">Admin</option>
 												</select>
                                                 @error('role')
