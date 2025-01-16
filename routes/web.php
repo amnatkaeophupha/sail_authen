@@ -22,3 +22,4 @@ Route::get('/signout', [AuthController::class, 'signout']);
 Route::group([],base_path('routes/admin.php'));
 Route::group([],base_path('routes/manager.php'));
 
+

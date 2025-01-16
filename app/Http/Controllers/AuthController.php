@@ -1,9 +1,9 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -13,8 +13,10 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
-
-
+use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 
 class AuthController extends Controller
 {
@@ -147,6 +149,49 @@ class AuthController extends Controller
 
     }
 
+    public function profile_images(Request $request)
+    {
+        $request->validate(['avatars' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',]);
+
+        $user = DB::table('users')->where('id', Auth::user()->id)->first();
+
+        if($user->avatar != null)
+        {
+            $path = 'avatars/'.$user->avatar;
+            if (Storage::disk('public')->exists($path)) { Storage::disk('public')->delete($path);}
+            User::where('id', Auth::user()->id)->update(['avatar' => null]);
+        }
+
+        $avatar = $request->file('avatars');
+        $avatar_name = 'userid-'.$user->id.'.'.$request->avatars->extension();
+        $avatar_path = $avatar->storeAs('avatars', $avatar_name, 'public'); // Upload to storage/app/public/avatars
+        //dd($avatar_path);
+        $manager = new ImageManager(new Driver());
+        $image = $manager->read(Storage::disk('public')->get($avatar_path));
+        $image->cover(100,100,'center');
+        $image->save(Storage::disk('public')->path($avatar_path));
+        User::where('id', Auth::user()->id)->update(['avatar' => $avatar_name]);
+        return back()->with('success', 'Profile image uploaded successfully.');
+    }
+
+    public function resize(Request $request)
+    {
+        $user = User::where('id', Auth::user()->id)->first();
+
+        $path = $user->avatar;
+
+        if (!Storage::disk('public')->exists($path)) {
+            abort(404, 'Image not found.');
+        }
+
+        $manager = new ImageManager(new Driver());
+
+        $image = $manager->read(Storage::disk('public')->get($path));
+
+        $image->scale(100);
+
+        $image->save(Storage::disk('public')->path($path));
+    }
 
     public function signout(Request $request)
     {
