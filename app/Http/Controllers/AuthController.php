@@ -35,6 +35,7 @@ class AuthController extends Controller
         $request->validate([
             'name'=> 'required',
             'email'=> 'required|email|unique:users',
+            'mobile' =>'required|string|min:10|max:10',
             'password' =>'required|string|min:6',
             'role'=>'required|in:admin,manager'
         ]);
@@ -42,6 +43,7 @@ class AuthController extends Controller
         $user = new User();
         $user->name = trim($request->name);
         $user->email = trim($request->email);
+        $user->mobile = trim($request->mobile);
         $user->password = trim($request->password); //Hash::make(password) in model User;
         $user->role = trim($request->role);
         //$user->remember_token = Str::random(50);
@@ -152,7 +154,6 @@ class AuthController extends Controller
     public function profile_images(Request $request)
     {
         $request->validate(['avatars' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',]);
-
         $user = DB::table('users')->where('id', Auth::user()->id)->first();
 
         if($user->avatar != null)
@@ -172,6 +173,23 @@ class AuthController extends Controller
         $image->save(Storage::disk('public')->path($avatar_path));
         User::where('id', Auth::user()->id)->update(['avatar' => $avatar_name]);
         return back()->with('success', 'Profile image uploaded successfully.');
+    }
+
+    public function profile_update(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email',
+            'mobile' => 'required|string|min:10|max:10',
+            'role'=>'required|in:admin,manager'
+        ]);
+
+        $user = User::where('id', Auth::user()->id)->first();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->mobile = $request->mobile;
+        $user->save();
+        return back()->with('data_success', 'Profile updated successfully.');
     }
 
     public function resize(Request $request)

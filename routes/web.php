@@ -17,7 +17,7 @@ Route::get('/forgot-password', function () { return view('auth.forgot-password')
 Route::post('/forgot-password', [AuthController::class, 'sendResetLinkEmail']);
 Route::get('/reset-password/{token}', function (string $token) { return view('auth.reset-password', ['token' => $token]);})->name('password.reset');
 Route::post('/reset-password', [AuthController::class,'resetPassword']);
-Route::get('/signout', [AuthController::class, 'signout']);
+Route::get('/signout', [AuthController::class, 'signout'])->name('signout');
 
 Route::group([],base_path('routes/admin.php'));
 Route::group([],base_path('routes/manager.php'));

@@ -65,6 +65,13 @@
                                                 @enderror
 											</div>
 											<div class="col-12">
+												<label for="inputEmailAddress" class="form-label">Moblie</label>
+												<input type="text" name="mobile" class="form-control">
+                                                @error('mobile')
+                                                <div class="text-danger rounded pt-2">{{ $message }}</div>
+                                                @enderror
+											</div>
+											<div class="col-12">
 												<label for="inputChoosePassword" class="form-label">Password</label>
 												<div class="input-group" id="show_hide_password">
 													<input type="password" name="password" class="form-control border-end-0" placeholder="Enter Password Min 6 characters"> <a href="javascript:;" class="input-group-text bg-transparent"><i class='bx bx-hide'></i></a>
