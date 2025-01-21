@@ -40,6 +40,18 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         @endif
+        @if(session('status'))
+        <div class="alert alert-info border-0 bg-info alert-dismissible fade show">
+            <div class="text-white">{{ session('status') }}</div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        @endif
+        @if(session('email'))
+        <div class="alert alert-info border-0 bg-info alert-dismissible fade show">
+            <div class="text-white">{{ session('email') }}</div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        @endif
         @if(session('fail'))
         <div class="alert alert-danger border-0 bg-danger alert-dismissible fade show">
             <div class="text-white">{{ session('fail') }}</div>
@@ -73,9 +85,9 @@
                                 <td>{{ $user->mobile }}</td>
                                 <td>{{ $user->role }}</td>
                                 <td>
+                                    <button type="button" class="btn btn-outline-success btn-sm"><i class='bx bx-key me-0'></i></button>
                                     <button type="button" onclick="editUser({{ $user->id }}, '{{ $user->name }}', '{{ $user->email }}','{{ $user->mobile }}','{{ $user->role }}')"
                                         data-bs-target="#editUserModal" data-bs-toggle="modal" class="btn btn-outline-primary btn-sm"><i class='bx bx-edit me-0'></i></button>
-                                    <button type="button" class="btn btn-outline-success btn-sm"><i class='bx bx-key me-0'></i></button>
                                     <button type="button" onclick="VerifyEmail({{ $user->id }},'{{ $user->email }}')" data-bs-target="#VerifyEmailModal" data-bs-toggle="modal" class="btn btn-outline-info btn-sm"><i class='bx bx-envelope-open me-0'></i></button>
                                     <form id="delete-form-{{ $user->id }}" method="POST" action="{{ route('users.destroy', $user->id) }}" class="d-inline">
                                         @csrf
@@ -159,7 +171,7 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox">
+                                <input class="form-check-input" type="checkbox" name="active">
                                 <label class="form-check-label">Check Active</label>
                             </div>
                         </div>
@@ -226,15 +238,6 @@
                             </div>
                         </div>
                     </div>
-                    <label class="col-sm-12 col-form-label"></label>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox">
-                                <label class="form-check-label">Check Active</label>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -250,10 +253,10 @@
 <div class="modal fade" id="VerifyEmailModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form method="POST" action="{{ url('admin/users/email') }}">
+            <form method="POST" action="{{ url('admin/users/sendmail') }}">
             @csrf
             <div class="modal-header bg-primary">
-                <h5 class="modal-title text-white" style="font-family:'Chakra Petch', sans-serif;">เพิ่มผู้ใช้งานระบบ</h5>
+                <h5 class="modal-title text-white" style="font-family:'Chakra Petch', sans-serif;">เปลี่ยนรหัสผ่าน</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" style="font-family:'Chakra Petch', sans-serif;">
@@ -270,7 +273,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <input type="hidden" name="id" id="user-id">
+                <input type="hidden" name="id" id="VerifyId">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="submit" class="btn btn-primary">VerifyEmail</button>
             </div>

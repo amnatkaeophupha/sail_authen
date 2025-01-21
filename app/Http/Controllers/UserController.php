@@ -5,29 +5,19 @@ use App\Models\User;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Support\Facades\Password;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $users = User::all();
         return view('admin.user-grid',compact('users'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         //dd($request->all());
@@ -36,8 +26,11 @@ class UserController extends Controller
             'email'=> 'required|email|unique:users',
             'mobile' =>'required|string|min:10|max:10',
             'password' =>'required|string|min:6',
-            'role'=>'required|in:admin,manager'
+            'role'=>'required|in:admin,manager',
+            'active'=>'required|in:on,off'
         ]);
+
+        Cache::flush();
 
         $user = new User();
         $user->name = trim($request->name);
@@ -45,8 +38,11 @@ class UserController extends Controller
         $user->mobile = trim($request->mobile);
         $user->password = trim($request->password); //Hash::make(password) in model User;
         $user->role = trim($request->role);
+        $user->active = trim($request->active);
         //$user->remember_token = Str::random(50);
         $rec = $user->save();
+
+        event(new Registered($user));
 
         if ($rec) {
 
@@ -59,28 +55,8 @@ class UserController extends Controller
 
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request)
     {
-
         $request->validate([
             'name'=> 'required',
             'email' => 'required|email',
@@ -112,17 +88,23 @@ class UserController extends Controller
             $user->save();
 
             return back()->with('success','You have Updated successfuly');
-
         }
-
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    public function SendVerifyMail(Request $request)
+    {
+        // Validate the email input
+        $request->validate(['email' => 'required|email|exists:users,email',]);
+        // Send the reset link
+        $status = Password::sendResetLink($request->only('email'));
+        // Check the status and return a response
+        return $status === Password::RESET_LINK_SENT
+        ? back()->with(['status' => __($status)])
+        : back()->withErrors(['email' => __($status)]);
+    }
+
     public function destroy(string $id)
     {
-        echo $id;
         $user = User::findOrFail($id);
         $user->delete();
         return back()->with('success','You have Deleted successfuly');

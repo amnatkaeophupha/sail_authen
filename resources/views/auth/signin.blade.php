@@ -42,6 +42,12 @@
 										<p class="mb-0">Please log in to your account</p>
 									</div>
 									<div class="form-body">
+                                        @if(session('message'))
+                                        <div class="alert alert-warning border-0 bg-warning alert-dismissible fade show">
+                                            <div class="text-white">{{ session('message') }}</div>
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        </div>
+                                        @endif
                                         @if(session('success'))
                                         <div class="alert alert-success border-0 bg-success alert-dismissible fade show">
                                             <div class="text-white">{{ session('success') }}</div>

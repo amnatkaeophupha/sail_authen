@@ -17,6 +17,7 @@ use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
+use Illuminate\Auth\Events\Registered;
 
 class AuthController extends Controller
 {
@@ -30,7 +31,6 @@ class AuthController extends Controller
 
     public function store(Request $request)
     {
-
         //dd($request->all());
         $request->validate([
             'name'=> 'required',
@@ -51,7 +51,9 @@ class AuthController extends Controller
 
         if ($rec) {
 
-            return redirect('signin')->with('success','You have Registered successfuly');
+            event(new Registered($user));
+            //return redirect('signin')->with('success','You have Registered successfuly');
+            return redirect('signin')->with('success','Verify Your Email Address');
 
         }else{
 
@@ -71,18 +73,17 @@ class AuthController extends Controller
         if (!Hash::check($credentials['password'], $user->password)){ return back()->with('fail', 'The provided password is incorrect.'); }
         //if($user->activate==null){ return back()->with('fail', 'User is not Active.'); }
 
-
         if (Auth::attempt($credentials,$remember, true))
         {
             if(Auth::user()->role=='admin'){
 
-                return redirect()->intended('/admin');
+                return redirect()->intended('admin');
                 //return view('admin.dashboard');
 
             }elseif(Auth::user()->role=='manager'){
 
                 //echo Auth::user()->role;
-                return redirect()->intended('/manager');
+                return redirect()->intended('manager');
                 //return view('manager.dashboard');
 
             }else{
