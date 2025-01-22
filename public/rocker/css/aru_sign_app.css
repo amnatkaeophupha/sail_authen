@@ -2,15 +2,11 @@
 
 /*
 
-Template Name: Rocker Admin
+Template Name: ARU Admin
 
-Author: codervent
+Author: codervent By Amnat Kaephupha
 
-Email: codervent@gmail.com
-
-File: app.css
-3019
-
+Email: phuphakaeo@gmail.com
 */
 
 
@@ -23,7 +19,9 @@ body {
 
 	letter-spacing: .5px;
 
-	background: #f7f7ff;
+	/* background: #f7f7ff;  by Amnat Kaephupha*/
+
+    background-image: url(../images/login-images/bg-login-img.jpg);
 
 	overflow-x: hidden;
 

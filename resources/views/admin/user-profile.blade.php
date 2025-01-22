@@ -17,18 +17,6 @@
                     </ol>
                 </nav>
             </div>
-            <div class="ms-auto">
-                <div class="btn-group">
-                    <button type="button" class="btn btn-primary">Settings</button>
-                    <button type="button" class="btn btn-primary split-bg-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown">	<span class="visually-hidden">Toggle Dropdown</span>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end">	<a class="dropdown-item" href="javascript:;">Action</a>
-                        <a class="dropdown-item" href="javascript:;">Another action</a>
-                        <a class="dropdown-item" href="javascript:;">Something else here</a>
-                        <div class="dropdown-divider"></div>	<a class="dropdown-item" href="javascript:;">Separated link</a>
-                    </div>
-                </div>
-            </div>
         </div>
         <!--end breadcrumb-->
         <div class="container">
@@ -41,7 +29,7 @@
                                     @if(Auth::user()->avatar <> null)
                                     <img src="{{ asset('storage/avatars/'.Auth::user()->avatar) }}" alt="Admin" class="rounded-circle p-1 bg-primary" width="110">
                                     @else
-                                    <img src="{{url('rocker');}}/images/avatars/avatar-2.png" alt="Admin" class="rounded-circle p-1 bg-primary" width="110">
+                                    <img src="{{url('rocker');}}/images/avatars/avatar-0.png" alt="Admin" class="rounded-circle p-1 bg-primary" width="110">
                                     @endif
                                     <div class="mt-3">
                                         <h4>{{ Auth::user()->name; }}</h4>
@@ -67,7 +55,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
                 <div class="row">
                     <div class="col-lg-6">
@@ -149,7 +136,19 @@
                                     </div>
                                 </div>
                             </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-body" style="font-family:'Chakra Petch', sans-serif;">
+                                <div>
+									<h5 class="card-title">Delete your Account</h5>
+								</div>
+								<p class="card-text">{{ Auth::user()->name; }} </p>	<a href="{{ url('admin/destroy') }}" class="btn btn-danger">Delete your entier account</a>
                             </div>
                         </div>
                     </div>

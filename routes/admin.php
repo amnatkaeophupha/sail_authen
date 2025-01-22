@@ -19,10 +19,8 @@ Route::prefix('admin')->middleware(['role:admin','verified'])->group(function ()
     Route::get('/users', [UserController::class,'index']);
     Route::post('/users/store', [UserController::class,'store']);
     Route::post('/users/update', [UserController::class,'update']);
-
     Route::post('users/sendmail', [UserController::class, 'SendVerifyMail']);
-
     Route::delete('users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
-
-
+    Route::post('users/{id}/update-status', [UserController::class, 'updateStatus']);
+    Route::get('/destroy', [AuthController::class, 'destroy']);
 });

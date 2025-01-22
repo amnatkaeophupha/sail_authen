@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -27,8 +28,9 @@ class UserController extends Controller
             'mobile' =>'required|string|min:10|max:10',
             'password' =>'required|string|min:6',
             'role'=>'required|in:admin,manager',
-            'active'=>'required|in:on,off'
         ]);
+
+        if($request->active_users == 'on'){ $active = 1; }else{ $active = 0;}
 
         Cache::flush();
 
@@ -38,8 +40,7 @@ class UserController extends Controller
         $user->mobile = trim($request->mobile);
         $user->password = trim($request->password); //Hash::make(password) in model User;
         $user->role = trim($request->role);
-        $user->active = trim($request->active);
-        //$user->remember_token = Str::random(50);
+        $user->active = $active;
         $rec = $user->save();
 
         event(new Registered($user));
@@ -103,8 +104,32 @@ class UserController extends Controller
         : back()->withErrors(['email' => __($status)]);
     }
 
+    public function updateStatus(Request $request, $id)
+    {
+        $request->validate([
+            'active' => 'required|boolean', // Ensure `active` is either 0 or 1
+        ]);
+
+        $user = User::findOrFail($id);
+        $user->active = $request->active;
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'User status updated successfully!',
+        ]);
+    }
+
     public function destroy(string $id)
     {
+        $user = User::where('id',$id)->first();
+
+        if($user->avatar != null)
+        {
+            $path = 'avatars/'.$user->avatar;
+            if (Storage::disk('public')->exists($path)) { Storage::disk('public')->delete($path);}
+        }
+
         $user = User::findOrFail($id);
         $user->delete();
         return back()->with('success','You have Deleted successfuly');

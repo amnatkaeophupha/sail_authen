@@ -214,10 +214,28 @@ class AuthController extends Controller
 
     public function signout(Request $request)
     {
+
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect('signin');
+    }
+
+    public function destroy(Request $request)
+    {
+        echo "recommended to delete the user account";
+        // if(Auth::user()->avatar != null)
+        // {
+        //     $path = 'avatars/'.Auth::user()->avatar;
+        //     if (Storage::disk('public')->exists($path)) { Storage::disk('public')->delete($path);}
+        // }
+        // $user = Auth::findOrFail(Auth::user()->id);
+        // $user->delete();
+
+        // Auth::logout();
+        // $request->session()->invalidate();
+        // $request->session()->regenerateToken();
+        // return redirect('signin');
     }
 }
 

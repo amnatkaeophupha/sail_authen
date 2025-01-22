@@ -24,7 +24,7 @@
                 @if(Auth::user()->avatar <> null)
                 <img src="{{ asset('storage/avatars/'.Auth::user()->avatar) }}" alt="user avatar" class="user-img">
                 @else
-                <img src="{{url('rocker');}}/images/avatars/avatar-2.png" alt="user avatar" class="user-img">
+                <img src="{{url('rocker');}}/images/avatars/avatar-0.png" alt="user avatar" class="user-img">
                 @endif
                 <div class="user-info" >
                     <p class="user-name mb-0">{{ Auth::user()->name; }}</p>
@@ -33,10 +33,8 @@
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
                 <li><a class="dropdown-item d-flex align-items-center" href="{{ url('admin/profile') }}"><i class="bx bx-user fs-5"></i><span>Profile</span></a></li>
-                <li><a class="dropdown-item d-flex align-items-center" href="{{ url('admin/users') }}"><i class="bx bx-cog fs-5"></i><span>Settings</span></a></li>
+                <li><a class="dropdown-item d-flex align-items-center" href="{{ url('admin/users') }}"><i class="bx bx-cog fs-5"></i><span>Users Settings</span></a></li>
                 <li><a class="dropdown-item d-flex align-items-center" href="{{ url('admin')}}"><i class="bx bx-home-circle fs-5"></i><span>Dashboard</span></a></li>
-                <li><a class="dropdown-item d-flex align-items-center" href="javascript:;"><i class="bx bx-dollar-circle fs-5"></i><span>Earnings</span></a></li>
-                <li><a class="dropdown-item d-flex align-items-center" href="javascript:;"><i class="bx bx-download fs-5"></i><span>Downloads</span></a></li>
                 <li><div class="dropdown-divider mb-0"></div></li>
                 <li><a class="dropdown-item d-flex align-items-center" href="{{route('signout')}}"><i class="bx bx-log-out-circle"></i><span>Logout</span></a></li>
             </ul>
